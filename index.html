@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>判断位师徒制 · 家长入口</title>
+</head>
+<body>
+  <h2>判断位师徒制｜家长自测</h2>
+  <p>说明：本页面仅用于判断与风险提示，不进入执行位。</p >
+
+  <p>1️⃣ 你更希望我做什么？</p >
+  <select id="q1">
+    <option>立刻帮我把事情办成</option>
+    <option>帮我判断值不值得做</option>
+    <option>先看风险再决定</option>
+  </select>
+
+  <p>2️⃣ 如果结论是“现在不适合做”，你能接受吗？</p >
+  <select id="q2">
+    <option>不能</option>
+    <option>能</option>
+  </select>
+
+  <p>3️⃣ 一句话说明：你对孩子目前最真实的期待</p >
+  <textarea id="q3" rows="4" style="width:100%"></textarea>
+
+  <br><br>
+  <button onclick="submitForm()">生成判断说明</button>
+
+  <pre id="result" style="white-space:pre-wrap;margin-top:20px;"></pre>
+
+  <script>
+    async function submitForm() {
+      const answers = {
+        q1: document.getElementById("q1").value,
+        q2: document.getElementById("q2").value,
+        q3: document.getElementById("q3").value
+      };
+
+      const r = await fetch("/api/chat", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ answers })
+      });
+
+      const data = await r.json();
+      document.getElementById("result").textContent =
+        data?.choices?.[0]?.message?.content || JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
