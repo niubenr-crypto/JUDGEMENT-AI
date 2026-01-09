@@ -3,51 +3,107 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>判断位师徒制 · 家长入口</title>
+  <title>判断位师徒制｜家长自测</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      margin: 24px;
+      max-width: 720px;
+    }
+    h2 {
+      margin-bottom: 8px;
+    }
+    .desc {
+      color: #555;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    .block {
+      margin-bottom: 20px;
+    }
+    select, textarea {
+      width: 100%;
+      font-size: 15px;
+      padding: 6px;
+    }
+    button {
+      font-size: 15px;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 32px;
+      padding: 16px;
+      border: 1px solid #ddd;
+      background: #fafafa;
+      white-space: pre-wrap;
+    }
+    .footer {
+      margin-top: 24px;
+      font-size: 13px;
+      color: #666;
+    }
+  </style>
 </head>
 <body>
-  <h2>判断位师徒制｜家长自测</h2>
-  <p>说明：本页面仅用于判断与风险提示，不进入执行位。</p >
 
+<h2>判断位师徒制｜家长自测</h2>
+<div class="desc">
+  本页面仅用于判断与风险提示，不进入执行位，不提供方案。
+</div>
+
+<div class="block">
   <p>1️⃣ 你更希望我做什么？</p >
   <select id="q1">
-    <option>立刻帮我把事情办成</option>
-    <option>帮我判断值不值得做</option>
-    <option>先看风险再决定</option>
+    <option>帮我判断是否值得开始</option>
+    <option>直接告诉我怎么做</option>
+    <option>帮我尽快看到结果</option>
   </select>
+</div>
 
-  <p>2️⃣ 如果结论是“现在不适合做”，你能接受吗？</p >
+<div class="block">
+  <p>2️⃣ 如果结论是「现在不适合开始」，你能接受吗？</p >
   <select id="q2">
-    <option>不能</option>
     <option>能</option>
+    <option>不能</option>
   </select>
+</div>
 
-  <p>3️⃣ 一句话说明：你对孩子目前最真实的期待</p >
-  <textarea id="q3" rows="4" style="width:100%"></textarea>
+<div class="block">
+  <p>3️⃣ 一句话说明：你对孩子当前最真实的期待</p >
+  <textarea id="q3" rows="3"></textarea>
+</div>
 
-  <br><br>
-  <button onclick="submitForm()">生成判断说明</button>
+<button onclick="submitForm()">生成一次判断</button>
 
-  <pre id="result" style="white-space:pre-wrap;margin-top:20px;"></pre>
+<div id="result" class="result"></div>
 
-  <script>
-    async function submitForm() {
-      const answers = {
-        q1: document.getElementById("q1").value,
-        q2: document.getElementById("q2").value,
-        q3: document.getElementById("q3").value
-      };
+<div class="footer">
+  本判断基于你当前提供的信息一次性生成。<br>
+  若想改变判断结果，意味着需要改变现实条件，而不是反复询问。
+</div>
 
-      const r = await fetch("/api/chat", {
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({ answers })
-      });
+<script>
+async function submitForm() {
+  const answers = {
+    q1: document.getElementById("q1").value,
+    q2: document.getElementById("q2").value,
+    q3: document.getElementById("q3").value
+  };
 
-      const data = await r.json();
-      document.getElementById("result").textContent =
-        data?.choices?.[0]?.message?.content || JSON.stringify(data, null, 2);
-    }
-  </script>
+  const r = await fetch("/api/chat", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ answers })
+  });
+
+  const data = await r.json();
+  document.getElementById("result").textContent =
+    data?.choices?.[0]?.message?.content || JSON.stringify(data, null, 2);
+}
+</script>
+
 </body>
 </html>
